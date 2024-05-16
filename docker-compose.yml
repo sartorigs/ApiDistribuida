@@ -1,0 +1,54 @@
+version: "3.5"
+
+services:
+  api_1: &api
+    container_name: api_1
+    hostname: api_1
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./:/app/:z
+    environment:
+      - DATABASE_NAME=api_1
+      - VIZINHOS=["api_3"]
+      - MONGO_URI=mongodb://mongodb:27017
+
+  api_2:
+    <<: *api
+    container_name: api_2
+    hostname: api_2
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./:/app/:z
+    environment:
+      - DATABASE_NAME=api_2
+      - VIZINHOS=["api_1", "api_3"]
+      - MONGO_URI=mongodb://mongodb:27017
+
+  api_3:
+    <<: *api
+    container_name: api_3
+    hostname: api_3
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./:/app/:z
+    environment:
+      - DATABASE_NAME=api_3
+      - VIZINHOS=["api_1", "api_2"]
+      - MONGO_URI=mongodb://mongodb:27017
+
+  mongodb:
+    container_name: mongodb
+    hostname: mongodb
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+
+networks:
+  default:
+    name: dsd-net
