@@ -8,12 +8,12 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - "8002:8000"
+      - "8001:8000"
     volumes:
       - ./:/app/:z
     environment:
       - DATABASE_NAME=api_1
-      - VIZINHOS=["api_3"]
+      - VIZINHOS=["api_3", "api_5"]
       - MONGO_URI=mongodb://mongodb:27017
 
   api_2:
@@ -21,7 +21,7 @@ services:
     container_name: api_2
     hostname: api_2
     ports:
-      - "8003:8000"
+      - "8002:8000"
     volumes:
       - ./:/app/:z
     environment:
@@ -34,12 +34,38 @@ services:
     container_name: api_3
     hostname: api_3
     ports:
-      - "8004:8000"
+      - "8003:8000"
     volumes:
       - ./:/app/:z
     environment:
       - DATABASE_NAME=api_3
       - VIZINHOS=["api_1", "api_2"]
+      - MONGO_URI=mongodb://mongodb:27017
+
+  api_4:
+    <<: *api
+    container_name: api_4
+    hostname: api_4
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./:/app/:z
+    environment:
+      - DATABASE_NAME=api_4
+      - VIZINHOS=["api_2"]
+      - MONGO_URI=mongodb://mongodb:27017
+
+  api_5:
+    <<: *api
+    container_name: api_5
+    hostname: api_5
+    ports:
+      - "8006:8000"
+    volumes:
+      - ./:/app/:z
+    environment:
+      - DATABASE_NAME=api_5
+      - VIZINHOS=["api_3", "api_4"]
       - MONGO_URI=mongodb://mongodb:27017
 
   mongodb:
